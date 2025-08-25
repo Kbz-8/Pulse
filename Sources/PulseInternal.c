@@ -113,14 +113,50 @@ size_t PulseStrlcpy(char* dst, const char* src, size_t maxlen)
 
 char* PulseStrtokR(char* str, const char* delim, char** saveptr)
 {
+	if(!delim || !saveptr || (!str && !*saveptr))
+		return PULSE_NULLPTR;
+
 	if(str != PULSE_NULLPTR)
 		*saveptr = str;
-	else if(*saveptr == PULSE_NULLPTR)
+	else
+	{
+		if(*saveptr == PULSE_NULLPTR)
+			return PULSE_NULLPTR;
+		str = *saveptr;
+	}
+
+	const char* p = delim;
+	while(*p && *str)
+	{
+		if(*str == *p)
+		{
+			++str;
+			p = delim;
+			continue;
+		}
+		++p;
+	}
+	if(!*str)
+	{
+		*saveptr = str;
 		return PULSE_NULLPTR;
-	char* token = strtok(*saveptr, delim);
-	if(token != PULSE_NULLPTR)
-		*saveptr = PULSE_NULLPTR;
-	return token;
+	}
+
+	*saveptr = str;
+	while(**saveptr)
+	{
+		p = delim;
+		while(*p)
+		{
+			if(**saveptr == *p++)
+			{
+				*((*saveptr)++) = '\0';
+				return str;
+			}
+		}
+		++(*saveptr);
+	}
+	return str;
 }
 
 static int PulseIsSpace(int x)

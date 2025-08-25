@@ -8,7 +8,6 @@ local nzsl_included = false
 
 function nzsl(backend)
 	if not nzsl_included then
-		add_repositories("nazara-engine-repo https://github.com/NazaraEngine/xmake-repo")
 		add_requires("nzsl", { configs = { shared = false, nzslc = true } })
 		if is_cross() then
 			add_requires("nzsl~host", { kind = "binary", host = true })

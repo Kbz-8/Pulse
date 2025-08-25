@@ -93,9 +93,10 @@ static void WebGPUReflectWGSLBindings(WebGPUBindGroupLayoutEntryInfo* infos, con
 
 	char* token;
 	char* copy = calloc(strlen(wgsl) + 1, 1);
+	char* copy_save = copy;
 	PulseStrlcpy(copy, wgsl, strlen(wgsl));
 
-	while((token = PulseStrtokR(copy, "\n", &copy)))
+	while((token = PulseStrtokR(copy, ";", &copy)))
 	{
 		found = false;
 		char* storage_pos;
@@ -151,7 +152,7 @@ static void WebGPUReflectWGSLBindings(WebGPUBindGroupLayoutEntryInfo* infos, con
 			infos->read_dimensions[count_read_images] = webgpu_dimension;
 			count_read_images++;
 		}
-		else
+		else if(webgpu_access != WGPUStorageTextureAccess_Undefined)
 		{
 			infos->write_access[count_write_images] = webgpu_access;
 			infos->write_formats[count_write_images] = webgpu_format;
@@ -160,7 +161,7 @@ static void WebGPUReflectWGSLBindings(WebGPUBindGroupLayoutEntryInfo* infos, con
 		}
 	}
 
-	free(copy);
+	free(copy_save);
 }
 
 static WGPUBindGroupLayout WebGPUCreateBindGroupLayout(PulseDevice device, const WebGPUBindGroupLayoutEntryInfo* infos,
@@ -189,6 +190,7 @@ static WGPUBindGroupLayout WebGPUCreateBindGroupLayout(PulseDevice device, const
 		{
 			entries[count].binding = count;
 			entries[count].visibility = WGPUShaderStage_Compute;
+			entries[count].nextInChain = PULSE_NULLPTR;
 
 			entries[count].buffer.nextInChain = PULSE_NULLPTR;
 			entries[count].buffer.hasDynamicOffset = false;
@@ -213,6 +215,7 @@ static WGPUBindGroupLayout WebGPUCreateBindGroupLayout(PulseDevice device, const
 		{
 			entries[count].binding = count;
 			entries[count].visibility = WGPUShaderStage_Compute;
+			entries[count].nextInChain = PULSE_NULLPTR;
 
 			entries[count].buffer.nextInChain = PULSE_NULLPTR;
 			entries[count].buffer.hasDynamicOffset = false;
@@ -239,6 +242,7 @@ static WGPUBindGroupLayout WebGPUCreateBindGroupLayout(PulseDevice device, const
 		{
 			entries[count].binding = count;
 			entries[count].visibility = WGPUShaderStage_Compute;
+			entries[count].nextInChain = PULSE_NULLPTR;
 
 			entries[count].buffer.nextInChain = PULSE_NULLPTR;
 			entries[count].buffer.hasDynamicOffset = false;
@@ -263,6 +267,7 @@ static WGPUBindGroupLayout WebGPUCreateBindGroupLayout(PulseDevice device, const
 		{
 			entries[count].binding = count;
 			entries[count].visibility = WGPUShaderStage_Compute;
+			entries[count].nextInChain = PULSE_NULLPTR;
 
 			entries[count].buffer.nextInChain = PULSE_NULLPTR;
 			entries[count].buffer.hasDynamicOffset = false;
@@ -289,6 +294,7 @@ static WGPUBindGroupLayout WebGPUCreateBindGroupLayout(PulseDevice device, const
 		{
 			entries[count].binding = count;
 			entries[count].visibility = WGPUShaderStage_Compute;
+			entries[count].nextInChain = PULSE_NULLPTR;
 
 			entries[count].buffer.nextInChain = PULSE_NULLPTR;
 			entries[count].buffer.hasDynamicOffset = false;
@@ -311,6 +317,7 @@ static WGPUBindGroupLayout WebGPUCreateBindGroupLayout(PulseDevice device, const
 	}
 
 	WGPUBindGroupLayoutDescriptor descriptor = { 0 };
+	descriptor.nextInChain = PULSE_NULLPTR;
 	descriptor.entryCount = count;
 	descriptor.entries = entries;
 	return wgpuDeviceCreateBindGroupLayout(webgpu_device->device, &descriptor);
