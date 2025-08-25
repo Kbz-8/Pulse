@@ -43,6 +43,9 @@
 		WGPULimits limits = { 0 };
 		wgpuAdapterGetLimits(adapter, &limits);
 
+		if(!wgpuAdapterHasFeature(adapter, WGPUNativeFeature_TextureAdapterSpecificFormatFeatures))
+			return 0;
+
 		if(infos.adapterType == WGPUAdapterType_DiscreteGPU)
 			score += 10000;
 
@@ -199,14 +202,25 @@ PulseDevice WebGPUCreateDevice(PulseBackend backend, PulseDevice* forbiden_devic
 	lost_callback.mode = WGPUCallbackMode_AllowSpontaneous;
 	lost_callback.userdata1 = device;
 	lost_callback.userdata2 = backend;
+
 	WGPUUncapturedErrorCallbackInfo uncaptured_callback = { 0 };
 	uncaptured_callback.callback = WebGPUDeviceUncapturedErrorCallback;
 	uncaptured_callback.userdata1 = device;
 	uncaptured_callback.userdata2 = backend;
+
 	WGPUDeviceDescriptor descriptor = { 0 };
 	descriptor.requiredLimits = &device->limits;
 	descriptor.deviceLostCallbackInfo = lost_callback;
 	descriptor.uncapturedErrorCallbackInfo = uncaptured_callback;
+
+	#ifndef PULSE_PLAT_WASM
+		WGPUFeatureName features[] = {
+			WGPUNativeFeature_TextureAdapterSpecificFormatFeatures,
+		};
+		descriptor.requiredFeatures = features;
+		descriptor.requiredFeatureCount = 1;
+	#endif
+
 	WGPURequestDeviceCallbackInfo device_callback = { 0 };
 	device_callback.callback = WebGPURequestDeviceCallback;
 	device_callback.mode = WGPUCallbackMode_AllowSpontaneous;
