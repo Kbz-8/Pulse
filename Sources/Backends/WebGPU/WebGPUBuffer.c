@@ -148,7 +148,7 @@ void WebGPUUnmapBuffer(PulseBuffer buffer)
 	if(webgpu_buffer->current_map_mode == PULSE_MAP_WRITE)
 	{
 		wgpuQueueWriteBuffer(webgpu_device->queue, webgpu_buffer->buffer, 0, webgpu_buffer->map, buffer->size);
-		WebGPUDeviceTick(buffer->device);
+		WebGPUDeviceTick(buffer->device); // Wait for buffer writing to commplete
 		free(webgpu_buffer->map);
 	}
 	else
