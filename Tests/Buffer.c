@@ -58,6 +58,8 @@ void TestBufferCreation()
 	CleanupPulse(backend);
 }
 
+#include <stdio.h>
+
 void TestBufferMapping()
 {
 	PulseBackend backend;
@@ -84,6 +86,8 @@ void TestBufferMapping()
 		void* ptr;
 		TEST_ASSERT_NOT_EQUAL_MESSAGE(PulseMapBuffer(buffer, PULSE_MAP_READ, &ptr), false, PulseVerbaliseErrorType(PulseGetLastErrorType()));
 		TEST_ASSERT_NOT_NULL(ptr);
+		for(int i = 0; i < 8; i++)
+			printf("%d - %d\n", data[i], ((unsigned char*)ptr)[i]);
 		TEST_ASSERT_EQUAL(memcmp(ptr, data, 8), 0);
 		PulseUnmapBuffer(buffer);
 	}
