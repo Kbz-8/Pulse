@@ -83,5 +83,9 @@ jobs:
 
     - name: Test WebGPU
       run: |
-        xmake build --yes WebGPUUnitTests
-        xmake run --yes WebGPUUnitTests
+        if [ "$ACTIONS_STEP_DEBUG" = "true" ]; then
+          xmake run --yes WebGPUUnitTests -vD
+        else
+          xmake run --yes WebGPUUnitTests
+        fi
+
