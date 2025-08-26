@@ -71,7 +71,7 @@ jobs:
 
     # Setup compilation mode and install project dependencies
     - name: Configure xmake and install dependencies
-      run: xmake config --webgpu=y --webgpu-tests=y --arch=${{ matrix.arch }} --mode=${{ matrix.confs.mode }} ${{ matrix.confs.config }} --ccache=n --yes
+      run: xmake config --webgpu=y --webgpu-tests=y --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} ${{ matrix.confs.config }} --ccache=n --yes
 
     # Save dependencies
     - name: Save cached xmake dependencies
@@ -91,5 +91,4 @@ jobs:
 
     - name: Test WebGPU
       run: |
-        xmake build --yes WebGPUUnitTests
-        xmake run --yes WebGPUUnitTests
+        xmake run --yes WebGPUUnitTests -vD
