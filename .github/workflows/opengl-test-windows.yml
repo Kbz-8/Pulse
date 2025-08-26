@@ -101,7 +101,7 @@ jobs:
       shell: pwsh
       run: |
         xmake config --opengl-tests=y --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} ${{ matrix.confs.config }} --ccache=n --yes
-        xmake build --yes OpenGLUnitTests
+        xmake build --yes OpenGLUnitTests -vD
 
         $bindir = Join-Path $PWD 'build\Bin\windows_x86_64'
         $exe = Join-Path $bindir 'OpenGLUnitTests.exe'
