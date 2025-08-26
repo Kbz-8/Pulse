@@ -82,6 +82,7 @@ jobs:
         key: assets-${{ hashFiles('assets/examples_version.txt', 'assets/unittests_version.txt') }}
 
     - name: Test WebGPU
+      shell: bash
       run: |
         if [ "$ACTIONS_STEP_DEBUG" = "true" ]; then
           xmake run --yes WebGPUUnitTests -vD
