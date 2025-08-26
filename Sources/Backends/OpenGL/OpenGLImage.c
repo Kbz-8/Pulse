@@ -92,7 +92,7 @@ PulseImage OpenGLCreateImageTryAndFail(PulseDevice device, const PulseImageCreat
 
 	if(image_type == GL_INVALID_ENUM)
 	{
-		if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
+		if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend) && !try_and_fail)
 			PulseLogErrorFmt(device->backend, "%s image type is not supported", device->backend->backend == PULSE_BACKEND_OPENGL ? "(OpenGL)" : "(OpenGL ES)");
 		PulseSetInternalError(PULSE_ERROR_INITIALIZATION_FAILED);
 		free(opengl_image);
@@ -101,7 +101,7 @@ PulseImage OpenGLCreateImageTryAndFail(PulseDevice device, const PulseImageCreat
 	}
 	if(image_format == GL_INVALID_ENUM)
 	{
-		if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
+		if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend) && !try_and_fail)
 			PulseLogErrorFmt(device->backend, "%s image format is not supported", device->backend->backend == PULSE_BACKEND_OPENGL ? "(OpenGL)" : "(OpenGL ES)");
 		PulseSetInternalError(PULSE_ERROR_INVALID_IMAGE_FORMAT);
 		free(opengl_image);

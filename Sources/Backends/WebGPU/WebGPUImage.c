@@ -176,26 +176,11 @@ bool WebGPUIsImageFormatValid(PulseDevice device, PulseImageFormat format, Pulse
 		wgpu_usage |= WGPUTextureUsage_StorageBinding | WGPUTextureUsage_CopySrc | WGPUTextureUsage_CopyDst;
 
 	if(wgpu_format == WGPUTextureFormat_Undefined)
-	{
-		if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
-			PulseLogError(device->backend, "(WebGPU) unsupported image format");
-		PulseSetInternalError(PULSE_ERROR_INVALID_IMAGE_FORMAT);
 		return false;
-	}
 	if(wgpu_usage == WGPUTextureUsage_None)
-	{
-		if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
-			PulseLogError(device->backend, "(WebGPU) unsupported image usage");
-		PulseSetInternalError(PULSE_ERROR_INVALID_IMAGE_USAGE);
 		return false;
-	}
 	if(dimension == WGPUTextureDimension_Undefined)
-	{
-		if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
-			PulseLogError(device->backend, "(WebGPU) unsupported image type");
-		PulseSetInternalError(PULSE_ERROR_INVALID_IMAGE_FORMAT);
 		return false;
-	}
 	return true;
 }
 

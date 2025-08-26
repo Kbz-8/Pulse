@@ -215,10 +215,11 @@ PulseDevice WebGPUCreateDevice(PulseBackend backend, PulseDevice* forbiden_devic
 
 	#ifndef PULSE_PLAT_WASM
 		WGPUFeatureName features[] = {
-			WGPUNativeFeature_TextureAdapterSpecificFormatFeatures,
+			(WGPUFeatureName)WGPUNativeFeature_TextureAdapterSpecificFormatFeatures,
+			WGPUFeatureName_TextureCompressionBC,
 		};
 		descriptor.requiredFeatures = features;
-		descriptor.requiredFeatureCount = 1;
+		descriptor.requiredFeatureCount = PULSE_SIZEOF_ARRAY(features);
 	#endif
 
 	WGPURequestDeviceCallbackInfo device_callback = { 0 };
