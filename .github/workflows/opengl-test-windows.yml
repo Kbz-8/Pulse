@@ -22,6 +22,10 @@ jobs:
 
     runs-on: ${{ matrix.os }}
     if: ${{ !contains(github.event.head_commit.message, 'ci skip') }}
+    env:
+      # Force software OpenGL (compute-capable) via Mesa llvmpipe
+      GALLIUM_DRIVER: llvmpipe
+      MESA_GL_VERSION_OVERRIDE: "4.5"
 
     steps:
     - name: Get current date as package key
@@ -30,31 +34,6 @@ jobs:
 
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    - name: Install 7zip
-      run: choco install -y 7zip
-
-    - name: Download Mesa (prebuilt, MSVC x64)
-      shell: pwsh
-      run: |
-        $ver = "24.3.4"
-        $uri = "https://github.com/pal1000/mesa-dist-win/releases/download/$ver/mesa3d-$ver-release-msvc.7z"
-        Invoke-WebRequest $uri -OutFile "$env:RUNNER_TEMP\mesa.7z"
-        7z x "$env:RUNNER_TEMP\mesa.7z" "-o$env:RUNNER_TEMP\mesa" -y
-
-    - name: Drop Mesa next to the exe (EGL headless)
-      shell: pwsh
-      run: |
-        $dll_dir = "$env:RUNNER_TEMP\mesa\x64"
-        Copy-Item "$dll_dir\opengl32.dll"      -Destination "build\Release"
-        Copy-Item "$dll_dir\libgallium_wgl.dll" -Destination "build\Release"
-        Copy-Item "$dll_dir\libEGL.dll"        -Destination "build\Release"
-        # If you use OSMesa (Mesa < 25.1): also copy osmesa.dll
-
-    - name: Force llvmpipe + core 4.5
-      run: |
-        setx GALLIUM_DRIVER llvmpipe
-        setx MESA_GL_VERSION_OVERRIDE 4.5
 
     # Force xmake to a specific folder (for cache)
     - name: Set xmake env
@@ -70,6 +49,20 @@ jobs:
     # Update xmake repository (in order to have the file that will be cached)
     - name: Update xmake repository
       run: xmake repo --update
+
+    # Headless OpenGL prerequisites (Windows)
+    - name: Install 7zip (for Mesa archive)
+      run: choco install -y 7zip
+
+    - name: Download Mesa (prebuilt, MSVC x64)
+      shell: pwsh
+      run: |
+        $ver = "24.3.4"
+        $uri = "https://github.com/pal1000/mesa-dist-win/releases/download/$ver/mesa3d-$ver-release-msvc.7z"
+        Invoke-WebRequest $uri -OutFile "$env:RUNNER_TEMP\mesa.7z"
+        7z x "$env:RUNNER_TEMP\mesa.7z" "-o$env:RUNNER_TEMP\mesa" -y
+        # expose for later steps
+        echo "MESA_DLL_DIR=$env:RUNNER_TEMP\mesa\x64" | Out-File -FilePath $env:GITHUB_ENV -Append
 
     # Fetch xmake dephash
     - name: Retrieve dependencies hash
@@ -105,8 +98,20 @@ jobs:
         key: assets-${{ hashFiles('assets/examples_version.txt', 'assets/unittests_version.txt') }}
 
     - name: Test
+      shell: pwsh
       run: |
-        xmake config --opengl-tests=y --arch=${{ matrix.arch }} --mode=${{ matrix.confs.mode }} ${{ matrix.confs.config }} --ccache=n --yes
+        xmake config --opengl-tests=y --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} ${{ matrix.confs.config }} --ccache=n --yes
         xmake build --yes OpenGLUnitTests
-        xmake run --yes OpenGLUnitTests
 
+        # resolve the built exe path via xmake's project API
+        $exe = & xmake l 'import("core.project.project"); local t = project.target("OpenGLUnitTests"); assert(t); print(t:targetfile())'
+        $exe = $exe.Trim()
+        if (-not (Test-Path $exe)) { throw "OpenGLUnitTests exe not found: $exe" }
+        $bindir = Split-Path $exe
+
+        # copy Mesa DLLs next to the exe to force software OpenGL on Windows
+        Copy-Item "$env:MESA_DLL_DIR\opengl32.dll"       -Destination $bindir -Force
+        Copy-Item "$env:MESA_DLL_DIR\libgallium_wgl.dll" -Destination $bindir -Force
+        Copy-Item "$env:MESA_DLL_DIR\libEGL.dll"         -Destination $bindir -Force
+
+        xmake run --yes OpenGLUnitTests
