@@ -43,7 +43,7 @@
 		WGPULimits limits = { 0 };
 		wgpuAdapterGetLimits(adapter, &limits);
 
-		if(!wgpuAdapterHasFeature(adapter, WGPUNativeFeature_TextureAdapterSpecificFormatFeatures))
+		if(!wgpuAdapterHasFeature(adapter, (WGPUFeatureName)WGPUNativeFeature_TextureAdapterSpecificFormatFeatures))
 			return 0;
 
 		if(infos.adapterType == WGPUAdapterType_DiscreteGPU)

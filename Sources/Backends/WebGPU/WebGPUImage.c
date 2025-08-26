@@ -23,14 +23,6 @@ static WGPUTextureFormat PulseImageFormatToWGPUTextureFormat[] = {
 	WGPUTextureFormat_Undefined,         // B5G5R5A1_UNORM
 	WGPUTextureFormat_Undefined,         // B4G4R4A4_UNORM
 	WGPUTextureFormat_BGRA8Unorm,        // B8G8R8A8_UNORM
-	WGPUTextureFormat_BC1RGBAUnorm,      // BC1_UNORM
-	WGPUTextureFormat_BC2RGBAUnorm,      // BC2_UNORM
-	WGPUTextureFormat_BC3RGBAUnorm,      // BC3_UNORM
-	WGPUTextureFormat_BC4RUnorm,         // BC4_UNORM
-	WGPUTextureFormat_BC5RGUnorm,        // BC5_UNORM
-	WGPUTextureFormat_BC7RGBAUnorm,      // BC7_UNORM
-	WGPUTextureFormat_BC6HRGBFloat,      // BC6H_FLOAT
-	WGPUTextureFormat_BC6HRGBUfloat,     // BC6H_UFLOAT
 	WGPUTextureFormat_R8Snorm,           // R8_SNORM
 	WGPUTextureFormat_RG8Snorm,          // R8G8_SNORM
 	WGPUTextureFormat_RGBA8Snorm,        // R8G8B8A8_SNORM
