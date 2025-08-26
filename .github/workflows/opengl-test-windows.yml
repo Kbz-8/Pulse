@@ -103,15 +103,15 @@ jobs:
         xmake config --opengl-tests=y --arch=${{ matrix.arch }} --mode=${{ matrix.mode }} ${{ matrix.confs.config }} --ccache=n --yes
         xmake build --yes OpenGLUnitTests
 
-        # resolve the built exe path via xmake's project API
-        $exe = & xmake l 'import("core.project.project"); local t = project.target("OpenGLUnitTests"); assert(t); print(t:targetfile())'
-        $exe = $exe.Trim()
-        if (-not (Test-Path $exe)) { throw "OpenGLUnitTests exe not found: $exe" }
-        $bindir = Split-Path $exe
+        $bindir = Join-Path $PWD 'build\Bin\windows_x86_64'
+        $exe = Join-Path $bindir 'OpenGLUnitTests.exe'
+        if (!(Test-Path $exe)) { throw "OpenGLUnitTests.exe not found at $exe" }
 
-        # copy Mesa DLLs next to the exe to force software OpenGL on Windows
+        # Copy Mesa DLLs next to the exe (forces software OpenGL on Windows)
         Copy-Item "$env:MESA_DLL_DIR\opengl32.dll"       -Destination $bindir -Force
         Copy-Item "$env:MESA_DLL_DIR\libgallium_wgl.dll" -Destination $bindir -Force
         Copy-Item "$env:MESA_DLL_DIR\libEGL.dll"         -Destination $bindir -Force
+        # If needed for older setups: Copy-Item "$env:MESA_DLL_DIR\osmesa.dll" $bindir -Force
 
-        xmake run --yes OpenGLUnitTests
+        # Run tests
+        & $exe
