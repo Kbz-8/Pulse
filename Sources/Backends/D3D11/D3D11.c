@@ -19,6 +19,8 @@ PulseBackendFlags Direct3D11CheckSupport(PulseBackendFlags candidates, PulseShad
 
 bool Direct3D11LoadBackend(PulseBackend backend, PulseDebugLevel debug_level)
 {
+	PULSE_UNUSED(backend);
+	PULSE_UNUSED(debug_level);
 	return true;
 }
 
@@ -34,4 +36,3 @@ PulseBackendHandler D3D11Driver = {
 	.supported_shader_formats = PULSE_SHADER_FORMAT_DXBC_BIT,
 	.driver_data = PULSE_NULLPTR
 };
-

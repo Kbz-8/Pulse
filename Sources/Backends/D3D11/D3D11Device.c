@@ -2,13 +2,18 @@
 // This file is part of "Pulse"
 // For conditions of distribution and use, see copyright notice in LICENSE
 
-#include <Pulse.h>
-
 #include <wchar.h>
 
+#include <Pulse.h>
 #include "../../PulseInternal.h"
 #include "D3D11.h"
+#include "D3D11ComputePipeline.h"
+#include "D3D11CommandList.h"
 #include "D3D11Device.h"
+#include "D3D11Fence.h"
+#include "D3D11Buffer.h"
+#include "D3D11Image.h"
+#include "D3D11ComputePass.h"
 
 bool Direct3D11IsDedicatedAdapter(IDXGIAdapter1* adapter)
 {
@@ -146,8 +151,7 @@ PulseDevice Direct3D11CreateDevice(PulseBackend backend, PulseDevice* forbiden_d
 	};
 
 	D3D11CreateDevice((IDXGIAdapter*)device->adapter, D3D_DRIVER_TYPE_UNKNOWN, PULSE_NULLPTR, 0, feature_levels, PULSE_SIZEOF_ARRAY(feature_levels), D3D11_SDK_VERSION, &device->device, PULSE_NULLPTR, &device->context);
-
-	pulse_device->PFN_DestroyDevice = Direct3D11DestroyDevice;
+	PULSE_LOAD_DRIVER_DEVICE(Direct3D11);
 
 	if(PULSE_IS_BACKEND_HIGH_LEVEL_DEBUG(backend))
 		PulseLogInfoFmt(backend, "(D3D11) created device from %ls", device->description.Description);

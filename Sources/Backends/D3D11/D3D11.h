@@ -2,6 +2,8 @@
 // This file is part of "Pulse"
 // For conditions of distribution and use, see copyright notice in LICENSE
 
+#include <Pulse.h>
+
 #ifdef PULSE_ENABLE_D3D11_BACKEND
 
 #ifndef PULSE_D3D11_H_
@@ -18,7 +20,7 @@
 
 #define D3D11_RETRIEVE_DRIVER_DATA_AS(handle, cast) ((cast)handle->driver_data)
 
-PulseBackendFlags Direct3D11CheckSupport(PulseBackendFlags candidates, PulseShaderFormatsFlags shader_formats_used); // Return PULSE_BACKEND_D3D11 in case of success and PULSE_BACKEND_INVALID otherwise
+PulseBackendFlags Direct3D11CheckSupport(PulseBackendFlags candidates, PulseShaderFormatsFlags shader_formats_used); // Returns corresponding PULSE_BACKEND enum in case of success and PULSE_BACKEND_INVALID otherwise
 
 #endif // PULSE_D3D11_H_
 

@@ -2,12 +2,13 @@
 // This file is part of "Pulse"
 // For conditions of distribution and use, see copyright notice in LICENSE
 
+#include <Pulse.h>
+
 #ifdef PULSE_ENABLE_D3D11_BACKEND
 
 #ifndef PULSE_D3D11_DEVICE_H_
 #define PULSE_D3D11_DEVICE_H_
 
-#include <Pulse.h>
 #include "D3D11.h"
 
 typedef struct Direct3D11Device
