@@ -13,7 +13,7 @@
 
 typedef struct Direct3D11Buffer
 {
-	int dummy;
+	ID3D11Buffer* buffer;
 } Direct3D11Buffer;
 
 PulseBuffer Direct3D11CreateBuffer(PulseDevice device, const PulseBufferCreateInfo* create_infos);

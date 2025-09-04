@@ -19,16 +19,6 @@ PulseComputePipeline VulkanCreateComputePipeline(PulseDevice device, const Pulse
 
 	pipeline->driver_data = vulkan_pipeline;
 
-	if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
-	{
-		if(info->code == PULSE_NULLPTR)
-			PulseLogError(device->backend, "invalid code pointer passed to PulseComputePipelineCreateInfo");
-		if(info->entrypoint == PULSE_NULLPTR)
-			PulseLogError(device->backend, "invalid entrypoint pointer passed to PulseComputePipelineCreateInfo");
-		if(info->format == PULSE_SHADER_FORMAT_SPIRV_BIT && (device->backend->supported_shader_formats & PULSE_SHADER_FORMAT_SPIRV_BIT) == 0)
-			PulseLogError(device->backend, "invalid shader format passed to PulseComputePipelineCreateInfo");
-	}
-
 	VkShaderModuleCreateInfo shader_module_create_info = { 0 };
 	shader_module_create_info.sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO;
 	shader_module_create_info.codeSize = info->code_size;

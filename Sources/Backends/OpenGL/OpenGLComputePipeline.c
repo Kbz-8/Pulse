@@ -24,16 +24,6 @@ PulseComputePipeline OpenGLCreateComputePipeline(PulseDevice device, const Pulse
 
 	pipeline->driver_data = opengl_pipeline;
 
-	if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
-	{
-		if(info->code == PULSE_NULLPTR)
-			PulseLogError(device->backend, "invalid code pointer passed to PulseComputePipelineCreateInfo");
-		if(info->entrypoint == PULSE_NULLPTR)
-			PulseLogError(device->backend, "invalid entrypoint pointer passed to PulseComputePipelineCreateInfo");
-		if(info->format == PULSE_SHADER_FORMAT_WGSL_BIT && (device->backend->supported_shader_formats & PULSE_SHADER_FORMAT_WGSL_BIT) == 0)
-			PulseLogError(device->backend, "invalid shader format passed to PulseComputePipelineCreateInfo");
-	}
-
 	uint8_t* code = (uint8_t*)calloc(info->code_size + 1, 1);
 	memcpy(code, info->code, info->code_size);
 

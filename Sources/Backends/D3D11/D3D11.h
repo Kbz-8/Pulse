@@ -9,6 +9,10 @@
 #ifndef PULSE_D3D11_H_
 #define PULSE_D3D11_H_
 
+#define D3D11_NO_HELPERS
+#define CINTERFACE
+#define COBJMACROS
+
 #ifdef PULSE_PLAT_WINDOWS
 	#include <initguid.h>
 #endif
@@ -19,6 +23,21 @@
 #include "../../PulseInternal.h"
 
 #define D3D11_RETRIEVE_DRIVER_DATA_AS(handle, cast) ((cast)handle->driver_data)
+
+#define CHECK_D3D11_RETVAL(backend, res, error, retval) \
+	do { \
+		if((res) != S_OK && (res) != S_FALSE) \
+		{ \
+			if(backend != PULSE_NULL_HANDLE && PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(backend)) \
+				PulseLogErrorFmt(backend, "(D3D11) call to a D3D11 function failed due to %s", D3D11VerbaliseResult(res)); \
+			PulseSetInternalError(error); \
+			return retval; \
+		} \
+	} while(0) \
+
+#define CHECK_D3D11(backend, res, error) CHECK_D3D11_RETVAL(backend, res, error, )
+
+const char* D3D11VerbaliseResult(HRESULT res);
 
 PulseBackendFlags Direct3D11CheckSupport(PulseBackendFlags candidates, PulseShaderFormatsFlags shader_formats_used); // Returns corresponding PULSE_BACKEND enum in case of success and PULSE_BACKEND_INVALID otherwise
 
