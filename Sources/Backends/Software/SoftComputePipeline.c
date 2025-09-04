@@ -119,16 +119,6 @@ PulseComputePipeline SoftCreateComputePipeline(PulseDevice device, const PulseCo
 	SoftComputePipeline* soft_pipeline = (SoftComputePipeline*)calloc(1, sizeof(SoftComputePipeline));
 	PULSE_CHECK_ALLOCATION_RETVAL(soft_pipeline, PULSE_NULL_HANDLE);
 
-	if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
-	{
-		if(info->code == PULSE_NULLPTR)
-			PulseLogError(device->backend, "invalid code pointer passed to PulseComputePipelineCreateInfo");
-		if(info->entrypoint == PULSE_NULLPTR)
-			PulseLogError(device->backend, "invalid entrypoint pointer passed to PulseComputePipelineCreateInfo");
-		if(info->format == PULSE_SHADER_FORMAT_SPIRV_BIT && (device->backend->supported_shader_formats & PULSE_SHADER_FORMAT_SPIRV_BIT) == 0)
-			PulseLogError(device->backend, "invalid shader format passed to PulseComputePipelineCreateInfo");
-	}
-
 	soft_pipeline->program = spvm_program_create(soft_device->spv_context, (spvm_source)info->code, info->code_size / sizeof(spvm_word));
 	soft_pipeline->entry_point = calloc(1, strlen(info->entrypoint));
 	PULSE_CHECK_ALLOCATION_RETVAL(soft_pipeline->entry_point, PULSE_NULL_HANDLE);

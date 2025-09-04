@@ -35,7 +35,7 @@ bool Direct3D11IsDedicatedAdapter(IDXGIAdapter1* adapter)
 static uint64_t Direct3D11ScoreAdapter(IDXGIAdapter1* adapter)
 {
 	DXGI_ADAPTER_DESC1 desc;
-	adapter->lpVtbl->GetDesc1(adapter, &desc);
+	IDXGIAdapter1_GetDesc1(adapter, &desc);
 
 	D3D_FEATURE_LEVEL feature_levels[] = {
 		D3D_FEATURE_LEVEL_11_1,
@@ -58,9 +58,18 @@ static uint64_t Direct3D11ScoreAdapter(IDXGIAdapter1* adapter)
 	if(FAILED(hr))
 		return 0;
 
-	hr = base_device->lpVtbl->QueryInterface(base_device, &IID_ID3D11Device1, (void**)&d3d_device1);
+	hr = ID3D11Device_QueryInterface(base_device, &IID_ID3D11Device1, (void**)&d3d_device1);
 	if(FAILED(hr) || out_feature_level < D3D_FEATURE_LEVEL_10_0)
 		goto Cleanup;
+
+	// Verify compute shader support presence
+	if(ID3D11Device_GetFeatureLevel(base_device) < D3D_FEATURE_LEVEL_11_0)
+	{
+		D3D11_FEATURE_DATA_D3D10_X_HARDWARE_OPTIONS hwopts = { 0 };
+		ID3D11Device_CheckFeatureSupport(base_device, D3D11_FEATURE_D3D10_X_HARDWARE_OPTIONS, &hwopts, sizeof(hwopts));
+		if(!hwopts.ComputeShaders_Plus_RawAndStructuredBuffers_Via_Shader_4_x)
+			goto Cleanup;
+	}
 
 	if(Direct3D11IsDedicatedAdapter(adapter))
 		score += 50000;
@@ -77,9 +86,9 @@ static uint64_t Direct3D11ScoreAdapter(IDXGIAdapter1* adapter)
 
 Cleanup:
 	if(base_device)
-		base_device->lpVtbl->Release(base_device);
+		ID3D11Device_Release(base_device);
 	if(base_context)
-		base_context->lpVtbl->Release(base_context);
+		ID3D11DeviceContext_Release(base_context);
 	return score;
 }
 
@@ -90,11 +99,11 @@ static bool Direct3D11IsAdapterForbidden(IDXGIAdapter1* adapter, PulseDevice* fo
 	for(uint32_t i = 0; i < forbiden_devices_count; i++)
 	{
 		DXGI_ADAPTER_DESC1 desc1;
-		adapter->lpVtbl->GetDesc1(adapter, &desc1);
+		IDXGIAdapter1_GetDesc1(adapter, &desc1);
 
 		DXGI_ADAPTER_DESC1 desc2;
 		Direct3D11Device* d3d11_device = D3D11_RETRIEVE_DRIVER_DATA_AS(forbiden_devices[i], Direct3D11Device*);
-		d3d11_device->adapter->lpVtbl->GetDesc1(d3d11_device->adapter, &desc2);
+		IDXGIAdapter1_GetDesc1(d3d11_device->adapter, &desc2);
 
 		if(desc1.AdapterLuid.HighPart == desc2.AdapterLuid.HighPart && desc1.AdapterLuid.LowPart == desc2.AdapterLuid.LowPart)
 			return true;
@@ -118,9 +127,9 @@ static IDXGIAdapter1* Direct3D11SelectAdapter(IDXGIFactory1* factory, PulseDevic
 			best_device_score = current_device_score;
 			best_device_id = i;
 		}
-		adapter->lpVtbl->Release(adapter);
+		IDXGIAdapter1_Release(adapter);
 	}
-	if(factory->lpVtbl->EnumAdapters1(factory, best_device_id, &adapter) == DXGI_ERROR_NOT_FOUND)
+	if(IDXGIFactory1_EnumAdapters1(factory, best_device_id, &adapter) == DXGI_ERROR_NOT_FOUND)
 		return PULSE_NULLPTR;
 	return adapter;
 }
@@ -141,7 +150,7 @@ PulseDevice Direct3D11CreateDevice(PulseBackend backend, PulseDevice* forbiden_d
 	CreateDXGIFactory1(&IID_IDXGIFactory, (void**)&device->factory);
 
 	device->adapter = Direct3D11SelectAdapter(device->factory, forbiden_devices, forbiden_devices_count);
-	device->adapter->lpVtbl->GetDesc1(device->adapter, &device->description);
+	IDXGIAdapter1_GetDesc1(device->adapter, &device->description);
 
 	D3D_FEATURE_LEVEL feature_levels[] = {
 		D3D_FEATURE_LEVEL_11_1,
@@ -150,7 +159,11 @@ PulseDevice Direct3D11CreateDevice(PulseBackend backend, PulseDevice* forbiden_d
 		D3D_FEATURE_LEVEL_10_0
 	};
 
-	D3D11CreateDevice((IDXGIAdapter*)device->adapter, D3D_DRIVER_TYPE_UNKNOWN, PULSE_NULLPTR, 0, feature_levels, PULSE_SIZEOF_ARRAY(feature_levels), D3D11_SDK_VERSION, &device->device, PULSE_NULLPTR, &device->context);
+	UINT flags = 0;
+	if(PULSE_IS_BACKEND_HIGH_LEVEL_DEBUG(backend))
+		flags |= D3D11_CREATE_DEVICE_DEBUG;
+
+	D3D11CreateDevice((IDXGIAdapter*)device->adapter, D3D_DRIVER_TYPE_UNKNOWN, PULSE_NULLPTR, flags, feature_levels, PULSE_SIZEOF_ARRAY(feature_levels), D3D11_SDK_VERSION, &device->device, PULSE_NULLPTR, &device->context);
 	PULSE_LOAD_DRIVER_DEVICE(Direct3D11);
 
 	if(PULSE_IS_BACKEND_HIGH_LEVEL_DEBUG(backend))
@@ -163,10 +176,10 @@ void Direct3D11DestroyDevice(PulseDevice device)
 	Direct3D11Device* d3d11_device = D3D11_RETRIEVE_DRIVER_DATA_AS(device, Direct3D11Device*);
 	if(d3d11_device == PULSE_NULLPTR || d3d11_device->device == PULSE_NULLPTR)
 		return;
-	d3d11_device->device->lpVtbl->Release(d3d11_device->device);
-	d3d11_device->context->lpVtbl->Release(d3d11_device->context);
-	d3d11_device->adapter->lpVtbl->Release(d3d11_device->adapter);
-	d3d11_device->factory->lpVtbl->Release(d3d11_device->factory);
+	ID3D11Device_Release(d3d11_device->device);
+	ID3D11DeviceContext_Release(d3d11_device->context);
+	IDXGIAdapter1_Release(d3d11_device->adapter);
+	IDXGIFactory1_Release(d3d11_device->factory);
 	if(PULSE_IS_BACKEND_HIGH_LEVEL_DEBUG(device->backend))
 		PulseLogInfoFmt(device->backend, "(D3D11) destroyed device created from %ls", d3d11_device->description.Description);
 	free(d3d11_device);

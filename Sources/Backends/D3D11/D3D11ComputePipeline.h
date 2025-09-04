@@ -13,7 +13,7 @@
 
 typedef struct Direct3D11ComputePipeline
 {
-	int dummy;
+	ID3D11ComputeShader* shader;
 } Direct3D11ComputePipeline;
 
 PulseComputePipeline Direct3D11CreateComputePipeline(PulseDevice device, const PulseComputePipelineCreateInfo* info);

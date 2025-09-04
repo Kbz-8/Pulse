@@ -335,16 +335,6 @@ PulseComputePipeline WebGPUCreateComputePipeline(PulseDevice device, const Pulse
 
 	pipeline->driver_data = webgpu_pipeline;
 
-	if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
-	{
-		if(info->code == PULSE_NULLPTR)
-			PulseLogError(device->backend, "invalid code pointer passed to PulseComputePipelineCreateInfo");
-		if(info->entrypoint == PULSE_NULLPTR)
-			PulseLogError(device->backend, "invalid entrypoint pointer passed to PulseComputePipelineCreateInfo");
-		if(info->format == PULSE_SHADER_FORMAT_WGSL_BIT && (device->backend->supported_shader_formats & PULSE_SHADER_FORMAT_WGSL_BIT) == 0)
-			PulseLogError(device->backend, "invalid shader format passed to PulseComputePipelineCreateInfo");
-	}
-
 	WGPUShaderSourceWGSL source = { 0 };
 	source.chain.next = PULSE_NULLPTR;
 	source.chain.sType = WGPUSType_ShaderSourceWGSL;

@@ -11,6 +11,15 @@ PULSE_API PulseComputePipeline PulseCreateComputePipeline(PulseDevice device, co
 	if(info == PULSE_NULLPTR && PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
 		PulseLogError(device->backend, "null infos pointer");
 	PULSE_CHECK_PTR_RETVAL(info, PULSE_NULL_HANDLE);
+	if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
+	{
+		if(info->code == PULSE_NULLPTR)
+			PulseLogError(device->backend, "invalid code pointer passed to PulseComputePipelineCreateInfo");
+		if(info->entrypoint == PULSE_NULLPTR)
+			PulseLogError(device->backend, "invalid entrypoint pointer passed to PulseComputePipelineCreateInfo");
+		if((info->format & device->backend->supported_shader_formats) == 0)
+			PulseLogError(device->backend, "invalid shader format passed to PulseComputePipelineCreateInfo");
+	}
 	PulseComputePipeline pipeline = device->PFN_CreateComputePipeline(device, info);
 	if(pipeline == PULSE_NULL_HANDLE)
 		return PULSE_NULL_HANDLE;

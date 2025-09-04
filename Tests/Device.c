@@ -15,6 +15,27 @@ void TestDeviceSetup()
 	CleanupPulse(backend);
 }
 
+void TestMultipleDevices()
+{
+	PulseBackend backend;
+	SetupPulse(&backend);
+
+	#define DEVICES_COUNT 10
+
+	PulseDevice devices[DEVICES_COUNT];
+	for(int i = 0; i < DEVICES_COUNT; i++)
+	{
+		devices[i] = PulseCreateDevice(backend, NULL, 0);
+		TEST_ASSERT_NOT_EQUAL_MESSAGE(devices[i], PULSE_NULL_HANDLE, PulseVerbaliseErrorType(PulseGetLastErrorType()));
+	}
+
+	for(int i = 0; i < DEVICES_COUNT; i++)
+		PulseDestroyDevice(devices[i]);
+
+	#undef DEVICES_COUNT
+	CleanupPulse(backend);
+}
+
 void TestForbiddenDeviceSetup()
 {
 	PulseBackend backend;
@@ -78,6 +99,7 @@ void TestDevice()
 	RUN_TEST(TestDeviceSetup);
 	RUN_TEST(TestForbiddenDeviceSetup);
 	RUN_TEST(TestInvalidBackendDeviceSetup);
+	RUN_TEST(TestMultipleDevices);
 	RUN_TEST(TestBackendInUse);
 	RUN_TEST(TestShaderFormatSupport);
 }

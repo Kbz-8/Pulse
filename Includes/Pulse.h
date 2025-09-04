@@ -77,6 +77,7 @@ typedef enum PulseShaderFormatsBits
 	PULSE_SHADER_FORMAT_WGSL_BIT     = PULSE_BIT(4), // Can be used by WebGPU backend
 	PULSE_SHADER_FORMAT_GLSL_BIT     = PULSE_BIT(5), // Can be used by OpenGL / OpenGL_ES backend
 	PULSE_SHADER_FORMAT_DXBC_BIT     = PULSE_BIT(6), // Can be used by D3D11 backend
+	PULSE_SHADER_FORMAT_HLSL_BIT     = PULSE_BIT(7), // Can be used by D3D11 backend
 	// More to come
 } PulseShaderFormatsBits;
 typedef PulseFlags PulseShaderFormatsFlags;
@@ -270,7 +271,7 @@ PULSE_API bool PulseDeviceSupportsShaderFormats(PulseDevice device, PulseShaderF
 PULSE_API void PulseDestroyDevice(PulseDevice device);
 
 PULSE_API PulseBuffer PulseCreateBuffer(PulseDevice device, const PulseBufferCreateInfo* create_infos);
-PULSE_API bool PulseMapBuffer(PulseBuffer buffer, PulseMapMode mode, void** data);
+PULSE_API bool PulseMapBuffer(PulseBuffer buffer, PulseMapMode mode, void** data); // Data writing may only apply when unmapping
 PULSE_API void PulseUnmapBuffer(PulseBuffer buffer);
 PULSE_API bool PulseCopyBufferToBuffer(PulseCommandList cmd, const PulseBufferRegion* src, const PulseBufferRegion* dst);
 PULSE_API bool PulseCopyBufferToImage(PulseCommandList cmd, const PulseBufferRegion* src, const PulseImageRegion* dst);
