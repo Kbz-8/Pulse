@@ -18,6 +18,7 @@ local backends = {
 		option = "metal",
 		default = is_plat("macosx", "iphoneos"),
 		custom = function()
+			add_frameworks("Metal")
 			add_files("Sources/Backends/Metal/**.m")
 		end
 	},
