@@ -9,6 +9,7 @@
 #include "D3D11Device.h"
 
 #pragma comment(lib,"d3d11.lib")
+#pragma comment(lib, "dxgi.lib")
 #pragma comment(lib,"d3dcompiler.lib")
 
 PulseBackendFlags Direct3D11CheckSupport(PulseBackendFlags candidates, PulseShaderFormatsFlags shader_formats_used)

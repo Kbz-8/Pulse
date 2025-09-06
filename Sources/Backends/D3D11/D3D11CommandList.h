@@ -17,7 +17,7 @@
 
 typedef struct Direct3D11CommandList
 {
-	int dummy;
+	ID3D11DeviceContext* context;
 } Direct3D11CommandList;
 
 PulseCommandList Direct3D11RequestCommandList(PulseDevice device, PulseCommandListUsage usage);
