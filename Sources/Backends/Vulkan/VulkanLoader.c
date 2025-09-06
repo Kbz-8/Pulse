@@ -40,7 +40,7 @@ bool VulkanInitLoader()
 		const char* libnames[] = {
 			"vulkan-1.dll"
 		};
-	#elif defined(PULSE_PLAT_MACOS)
+	#elif defined(PULSE_PLAT_APPLE)
 		const char* libnames[] = {
 			"libvulkan.dylib",
 			"libvulkan.1.dylib",

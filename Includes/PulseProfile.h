@@ -48,8 +48,23 @@ extern "C" {
 	#define PULSE_PLAT_LINUX
 	#define PULSE_PLAT_POSIX
 #elif defined(__APPLE__) && defined(__MACH__)
-	#define PULSE_PLAT_MACOS
+	#define PULSE_PLAT_APPLE
 	#define PULSE_PLAT_POSIX
+	#include <TargetConditionals.h>
+	#if TARGET_IPHONE_SIMULATOR
+		 // iOS, tvOS, or watchOS Simulator
+		#define PULSE_PLAT_IOS
+	#elif TARGET_OS_MACCATALYST
+		 // Mac's Catalyst (ports iOS API into Mac, like UIKit).
+		#define PULSE_PLAT_IOS
+	#elif TARGET_OS_IPHONE
+		// iOS, tvOS, or watchOS device
+		#define PULSE_PLAT_IOS
+	#elif TARGET_OS_MAC
+		#define PULSE_PLAT_MACOS
+	#else
+		#error "Unknown Apple platform"
+	#endif
 #elif defined(unix) || defined(__unix__) || defined(__unix)
 	#define PULSE_PLAT_UNIX
 	#define PULSE_PLAT_POSIX

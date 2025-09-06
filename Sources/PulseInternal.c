@@ -42,7 +42,7 @@
 	PULSE_IMPORT_API FARPROC __stdcall GetProcAddress(HMODULE, LPCSTR);
 	PULSE_IMPORT_API int __stdcall FreeLibrary(HMODULE);
 #else
-	#ifdef PULSE_PLAT_MACOS
+	#ifdef PULSE_PLAT_APPLE
 		#include <stdlib.h>
 	#endif
 	#include <dlfcn.h>
