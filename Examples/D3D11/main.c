@@ -22,7 +22,7 @@ void DebugCallBack(PulseDebugMessageSeverity severity, const char* message)
 #define BUFFER_SIZE (256 * sizeof(uint32_t))
 
 const char* hlsl_source = HLSL_SOURCE(
-	RWStructuredBuffer<int> ssbo : register(u0);
+	RWBuffer<int> ssbo : register(u0);
 
 	[numthreads(16, 16, 1)]
 	void CSMain(uint3 grid : SV_DispatchThreadID)
@@ -52,6 +52,14 @@ int main(void)
 		info.num_readwrite_storage_buffers = 1;
 		PulseComputePipeline pipeline = PulseCreateComputePipeline(device, &info);
 
+		PulseFence fence = PulseCreateFence(device);
+		PulseCommandList cmd = PulseRequestCommandList(device, PULSE_COMMAND_LIST_GENERAL);
+
+		PulseSubmitCommandList(device, cmd, fence);
+		PulseWaitForFences(device, &fence, 1, true);
+
+		PulseReleaseCommandList(device, cmd);
+		PulseDestroyFence(device, fence);
 		PulseDestroyComputePipeline(device, pipeline);
 	}
 
