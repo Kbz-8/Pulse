@@ -60,7 +60,7 @@ local backends = {
 		end,
 		before_build = function(target, os)
 			local gles_dir = target:pkg("opengl-headers"):installdir()
-			os.runv("python", {"Scripts/GenerateOpenGLDefs.py", "Sources/Backends/OpenGL/OpenGLFunctions.h", gles_dir .. "/include/GLES3/gl32.h", "Sources/Backends/OpenGL/OpenGLWraps.h"})
+			os.runv("python3", {"Scripts/GenerateOpenGLDefs.py", "Sources/Backends/OpenGL/OpenGLFunctions.h", gles_dir .. "/include/GLES3/gl32.h", "Sources/Backends/OpenGL/OpenGLWraps.h"})
 		end
 	},
 }
@@ -157,7 +157,11 @@ target("pulse_gpu")
 			add_headerfiles("Sources/Backends/" .. name .. "/**.h", { prefixdir = "private", install = false })
 			add_headerfiles("Sources/Backends/" .. name .. "/**.inl", { prefixdir = "private", install = false })
 
-			add_files("Sources/Backends/" .. name .. "/**.c")
+			-- Checks if there are C files in the backend directory and add them if so
+			local cfiles = os.files("Sources/Backends/" .. name .. "/**.c")
+			if #cfiles > 0 then
+				add_files("Sources/Backends/" .. name .. "/**.c")
+			end
 
 			if module.custom then
 				module.custom()

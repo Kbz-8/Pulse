@@ -115,7 +115,7 @@ static VkInstance VulkanCreateInstance(PulseBackend backend, const char** extens
 	create_info.pApplicationInfo = &app_info;
 	create_info.enabledExtensionCount = extensions_count;
 	create_info.ppEnabledExtensionNames = extensions_enabled;
-	#ifdef PULSE_PLAT_MACOS
+	#ifdef PULSE_PLAT_APPLE
 		create_info.flags = VK_INSTANCE_CREATE_ENUMERATE_PORTABILITY_BIT_KHR;
 	#else
 		create_info.flags = 0;
@@ -151,7 +151,7 @@ static VkInstance VulkanCreateInstance(PulseBackend backend, const char** extens
 
 bool VulkanInitInstance(PulseBackend backend, VulkanInstance* instance, PulseDebugLevel debug_level)
 {
-	#ifdef PULSE_PLAT_MACOS
+	#ifdef PULSE_PLAT_APPLE
 		const char* extensions[] = {
 			VK_KHR_PORTABILITY_ENUMERATION_EXTENSION_NAME,
 		};

@@ -101,6 +101,8 @@
 	#endif
 #endif
 
+#define PULSE_ALIGN_UP(val, alignment) ((val + alignment - 1) & ~(alignment - 1))
+
 #define PULSE_LOAD_DRIVER_DEVICE_FUNCTION(fn, _namespace) pulse_device->PFN_##fn = _namespace##fn;
 #define PULSE_LOAD_DRIVER_DEVICE(_namespace) \
 	PULSE_LOAD_DRIVER_DEVICE_FUNCTION(DestroyDevice, _namespace) \

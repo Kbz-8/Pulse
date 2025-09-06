@@ -167,13 +167,17 @@ PulseDevice VulkanCreateDevice(PulseBackend backend, PulseDevice* forbiden_devic
 	instance->vkGetPhysicalDeviceMemoryProperties(device->physical, &device->memory_properties);
 	instance->vkGetPhysicalDeviceFeatures(device->physical, &device->features);
 
+	const char* extensions[] = {
+		"VK_KHR_portability_subset",
+	};
+
 	VkDeviceCreateInfo create_info = { 0 };
 	create_info.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
 	create_info.queueCreateInfoCount = unique_queues_count;
 	create_info.pQueueCreateInfos = queue_create_infos;
 	create_info.pEnabledFeatures = &device->features;
-	create_info.enabledExtensionCount = 0;
-	create_info.ppEnabledExtensionNames = PULSE_NULLPTR;
+	create_info.enabledExtensionCount = 1;
+	create_info.ppEnabledExtensionNames = extensions;
 	create_info.enabledLayerCount = 0;
 	create_info.ppEnabledLayerNames = PULSE_NULLPTR;
 	create_info.flags = 0;
