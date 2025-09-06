@@ -59,8 +59,7 @@ PulseDevice MetalCreateDevice(PulseBackend backend, PulseDevice* forbiden_device
 		MetalDevice* metal_device = (MetalDevice*)calloc(1, sizeof(MetalDevice));
 		PULSE_CHECK_ALLOCATION_RETVAL(metal_device, PULSE_NULL_HANDLE);
 
-//#ifdef PULSE_PLAT_MACOS
-#if 0
+#ifdef PULSE_PLAT_MACOS
 		uint64_t best = 0;
 		NSArray<id<MTLDevice>>* devices = MTLCopyAllDevices();
 		for(id<MTLDevice> candidate in devices)
@@ -77,8 +76,7 @@ PulseDevice MetalCreateDevice(PulseBackend backend, PulseDevice* forbiden_device
 #endif
 		if(!metal_device->device)
 		{
-			//#ifdef PULSE_PLAT_MACOS
-			#if 0
+			#ifdef PULSE_PLAT_MACOS
 				if(PULSE_IS_BACKEND_HIGH_LEVEL_DEBUG(backend))
 					PulseLogWarning(backend, "(Metal) failed to select device, falling back on default device");
 			#endif
