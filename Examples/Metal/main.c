@@ -50,6 +50,12 @@ int main(void)
 		info.num_readwrite_storage_buffers = 1;
 		PulseComputePipeline pipeline = PulseCreateComputePipeline(device, &info);
 
+		PulseFence fence = PulseCreateFence(device);
+		PulseCommandList cmd = PulseRequestCommandList(device, PULSE_COMMAND_LIST_GENERAL);
+
+		PulseReleaseCommandList(device, cmd);
+		PulseDestroyFence(device, fence);
+
 		PulseDestroyComputePipeline(device, pipeline);
 	}
 

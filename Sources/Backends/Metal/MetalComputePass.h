@@ -9,7 +9,13 @@
 #ifndef PULSE_METAL_COMPUTE_PASS_H_
 #define PULSE_METAL_COMPUTE_PASS_H_
 
+#include <Metal/Metal.h>
 #include "Metal.h"
+
+typedef struct MetalComputePass
+{
+	id<MTLComputeCommandEncoder> encoder;
+} MetalComputePass;
 
 PulseComputePass MetalCreateComputePass(PulseDevice device, PulseCommandList cmd);
 void MetalDestroyComputePass(PulseDevice device, PulseComputePass pass);

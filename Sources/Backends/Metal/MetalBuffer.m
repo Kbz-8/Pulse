@@ -66,8 +66,11 @@ bool MetalCopyBufferToImage(PulseCommandList cmd, const PulseBufferRegion* src, 
 
 void MetalDestroyBuffer(PulseDevice device, PulseBuffer buffer)
 {
-	MetalBuffer* metal_buffer = METAL_RETRIEVE_DRIVER_DATA_AS(buffer, MetalBuffer*);
-	metal_buffer->buffer = nil;
-	free(metal_buffer);
-	free(buffer);
+	@autoreleasepool
+	{
+		MetalBuffer* metal_buffer = METAL_RETRIEVE_DRIVER_DATA_AS(buffer, MetalBuffer*);
+		metal_buffer->buffer = nil;
+		free(metal_buffer);
+		free(buffer);
+	}
 }
