@@ -11,6 +11,11 @@
 
 #include "Template.h"
 
+typedef struct MetalComputePass
+{
+	int dummy;
+} MetalComputePass;
+
 PulseComputePass TemplateNameCreateComputePass(PulseDevice device, PulseCommandList cmd);
 void TemplateNameDestroyComputePass(PulseDevice device, PulseComputePass pass);
 

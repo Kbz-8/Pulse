@@ -75,11 +75,15 @@ PulseComputePipeline MetalCreateComputePipeline(PulseDevice device, const PulseC
 {
 	@autoreleasepool
 	{
+		MetalDevice* metal_device = (MetalDevice*)METAL_RETRIEVE_DRIVER_DATA_AS(device, MetalDevice*);
+
 		PulseComputePipelineHandler* pipeline = (PulseComputePipelineHandler*)calloc(1, sizeof(PulseComputePipelineHandler));
 		PULSE_CHECK_ALLOCATION_RETVAL(pipeline, PULSE_NULL_HANDLE);
 
 		MetalComputePipeline* metal_pipeline = (MetalComputePipeline*)calloc(1, sizeof(MetalComputePipeline));
 		PULSE_CHECK_ALLOCATION_RETVAL(metal_pipeline, PULSE_NULL_HANDLE);
+
+		pipeline->driver_data = metal_pipeline;
 
 		MetalLibraryFunction library_function = MetalCompileShader(device, info);
 		if(library_function.library == nil || library_function.function == nil)
@@ -90,7 +94,18 @@ PulseComputePipeline MetalCreateComputePipeline(PulseDevice device, const PulseC
 			return PULSE_NULL_HANDLE;
 		}
 
-		pipeline->driver_data = metal_pipeline;
+		MTLComputePipelineDescriptor* descriptor = [MTLComputePipelineDescriptor new];
+		descriptor.computeFunction = library_function.function;
+
+		NSError* error;
+		metal_pipeline->pipeline = [metal_device->device newComputePipelineStateWithDescriptor:descriptor options:MTLPipelineOptionNone reflection: nil error:&error];
+		if(error)
+		{
+			if(PULSE_IS_BACKEND_LOW_LEVEL_DEBUG(device->backend))
+				PulseLogErrorFmt(device->backend, "(Metal) failed to create compute compute pipeline; %s", [[error description] UTF8String]);
+			PulseSetInternalError(PULSE_ERROR_INITIALIZATION_FAILED);
+			return PULSE_NULL_HANDLE;
+		}
 
 		if(PULSE_IS_BACKEND_HIGH_LEVEL_DEBUG(device->backend))
 			PulseLogInfoFmt(device->backend, "(Metal) created new compute pipeline %p", pipeline);
@@ -100,10 +115,13 @@ PulseComputePipeline MetalCreateComputePipeline(PulseDevice device, const PulseC
 
 void MetalDestroyComputePipeline(PulseDevice device, PulseComputePipeline pipeline)
 {
-	MetalComputePipeline* metal_pipeline = METAL_RETRIEVE_DRIVER_DATA_AS(pipeline, MetalComputePipeline*);
-	metal_pipeline->pipeline = nil;
-	free(metal_pipeline);
-	if(PULSE_IS_BACKEND_HIGH_LEVEL_DEBUG(device->backend))
-		PulseLogInfoFmt(device->backend, "(Metal) destroyed compute pipeline %p", pipeline);
-	free(pipeline);
+	@autoreleasepool
+	{
+		MetalComputePipeline* metal_pipeline = METAL_RETRIEVE_DRIVER_DATA_AS(pipeline, MetalComputePipeline*);
+		metal_pipeline->pipeline = nil;
+		free(metal_pipeline);
+		if(PULSE_IS_BACKEND_HIGH_LEVEL_DEBUG(device->backend))
+			PulseLogInfoFmt(device->backend, "(Metal) destroyed compute pipeline %p", pipeline);
+		free(pipeline);
+	}
 }

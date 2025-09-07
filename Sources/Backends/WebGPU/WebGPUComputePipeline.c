@@ -10,7 +10,6 @@
 #include "../../PulseInternal.h"
 #include "WebGPU.h"
 #include "WebGPUDevice.h"
-#include "webgpu.h"
 #include "WebGPUComputePipeline.h"
 
 typedef struct WebGPUBindGroupLayoutEntryInfo
