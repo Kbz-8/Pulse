@@ -14,6 +14,8 @@
 typedef struct Direct3D11Buffer
 {
 	ID3D11Buffer* buffer;
+	ID3D11UnorderedAccessView* unordered_access_view;
+	ID3D11ShaderResourceView* shader_resource_view;
 } Direct3D11Buffer;
 
 PulseBuffer Direct3D11CreateBuffer(PulseDevice device, const PulseBufferCreateInfo* create_infos);

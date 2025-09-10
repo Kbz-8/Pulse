@@ -14,7 +14,7 @@
 
 typedef struct Direct3D11Fence
 {
-	int dummy;
+	ID3D11Query* query;
 } Direct3D11Fence;
 
 PulseFence Direct3D11CreateFence(PulseDevice device);

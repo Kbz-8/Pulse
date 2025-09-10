@@ -9,9 +9,6 @@
 #ifndef PULSE_D3D11_COMMAND_LIST_H_
 #define PULSE_D3D11_COMMAND_LIST_H_
 
-#include <stdatomic.h>
-#include <tinycthread.h>
-
 #include "D3D11.h"
 #include "D3D11Fence.h"
 

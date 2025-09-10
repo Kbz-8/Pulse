@@ -5,7 +5,7 @@
 [![Msys2 build](https://github.com/ft-grmhd/Pulse/actions/workflows/msys2-build.yml/badge.svg)](https://github.com/ft-grmhd/Pulse/actions/workflows/msys2-build.yml)
 [![Windows build](https://github.com/ft-grmhd/Pulse/actions/workflows/windows-build.yml/badge.svg)](https://github.com/ft-grmhd/Pulse/actions/workflows/windows-build.yml)
 
-Pulse is a low level GPGPU library designed for highly intensive general GPU computations with high control over the hardware. It is built on top of Vulkan. A Metal and WebGPU backends are in development.
+Pulse is a kind of low level GPGPU library with mid-tier control over the hardware. It is built on top of Vulkan/WebGPU/OpenGL/OpenGL ES. A Metal and D3D11 backends are in development.
 
 Unit tests map:
 |           | Linux | Windows | Msys2 (MinGW64) | macOS |
