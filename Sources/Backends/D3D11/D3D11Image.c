@@ -6,9 +6,19 @@
 #include "../../PulseInternal.h"
 #include "D3D11.h"
 #include "D3D11Image.h"
+#include "D3D11Device.h"
 
 PulseImage Direct3D11CreateImage(PulseDevice device, const PulseImageCreateInfo* create_infos)
 {
+	Direct3D11Device* d3d11_device = D3D11_RETRIEVE_DRIVER_DATA_AS(device, Direct3D11Device*);
+
+	PulseImage image = (PulseImage)calloc(1, sizeof(PulseImageHandler));
+	PULSE_CHECK_ALLOCATION_RETVAL(image, PULSE_NULL_HANDLE);
+
+	Direct3D11Image* d3d11_image = (Direct3D11Image*)calloc(1, sizeof(Direct3D11Image));
+	PULSE_CHECK_ALLOCATION_RETVAL(d3d11_image, PULSE_NULL_HANDLE);
+
+	return image;
 }
 
 bool Direct3D11IsImageFormatValid(PulseDevice device, PulseImageFormat format, PulseImageType type, PulseImageUsageFlags usage)

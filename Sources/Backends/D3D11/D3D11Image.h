@@ -13,7 +13,8 @@
 
 typedef struct Direct3D11Image
 {
-	int dummy;
+	ID3D11Resource* texture; // ID3D11Texture2D* or ID3D11Texture3D*
+	ID3D11ShaderResourceView* shader_view;
 } Direct3D11Image;
 
 PulseImage Direct3D11CreateImage(PulseDevice device, const PulseImageCreateInfo* create_infos);
