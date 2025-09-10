@@ -11,6 +11,13 @@
 
 #include "D3D11.h"
 
+typedef struct Direct3D11ComputePass
+{
+	bool should_bind_read_only_resources;
+	bool should_bind_write_resources;
+	bool should_bind_uniform_resources;
+} Direct3D11ComputePass;
+
 PulseComputePass Direct3D11CreateComputePass(PulseDevice device, PulseCommandList cmd);
 void Direct3D11DestroyComputePass(PulseDevice device, PulseComputePass pass);
 

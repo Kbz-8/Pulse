@@ -121,7 +121,7 @@ bool VulkanSubmitCommandList(PulseDevice device, PulseCommandList cmd, PulseFenc
 	switch(cmd->usage)
 	{
 		case PULSE_COMMAND_LIST_TRANSFER_ONLY: vulkan_queue = vulkan_device->queues[VULKAN_QUEUE_TRANSFER]; break;
-		case PULSE_COMMAND_LIST_GENERAL: // fallthrough
+		case PULSE_COMMAND_LIST_GENERAL:
 		default: vulkan_queue = vulkan_device->queues[VULKAN_QUEUE_COMPUTE]; break;
 	}
 
@@ -140,11 +140,11 @@ bool VulkanSubmitCommandList(PulseDevice device, PulseCommandList cmd, PulseFenc
 	{
 		case VK_SUCCESS: return true;
 
-		case VK_ERROR_OUT_OF_HOST_MEMORY: PulseSetInternalError(PULSE_ERROR_CPU_ALLOCATION_FAILED); return false;
-		case VK_ERROR_OUT_OF_DEVICE_MEMORY: PulseSetInternalError(PULSE_ERROR_DEVICE_ALLOCATION_FAILED); return false;
-		case VK_ERROR_DEVICE_LOST: PulseSetInternalError(PULSE_ERROR_DEVICE_LOST); return false;
+		case VK_ERROR_OUT_OF_HOST_MEMORY: PulseSetInternalError(PULSE_ERROR_CPU_ALLOCATION_FAILED); break;
+		case VK_ERROR_OUT_OF_DEVICE_MEMORY: PulseSetInternalError(PULSE_ERROR_DEVICE_ALLOCATION_FAILED); break;
+		case VK_ERROR_DEVICE_LOST: PulseSetInternalError(PULSE_ERROR_DEVICE_LOST); break;
 
-		default: return false;
+		default: break;
 	}
 	return false;
 }

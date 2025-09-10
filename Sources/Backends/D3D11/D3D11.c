@@ -10,7 +10,9 @@
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
-#pragma comment(lib,"d3dcompiler.lib")
+#ifndef PULSE_D3D11_COMPILER_UNAVAILABLE
+	#pragma comment(lib,"d3dcompiler.lib")
+#endif
 
 PulseBackendFlags Direct3D11CheckSupport(PulseBackendFlags candidates, PulseShaderFormatsFlags shader_formats_used)
 {
@@ -31,30 +33,6 @@ bool Direct3D11LoadBackend(PulseBackend backend, PulseDebugLevel debug_level)
 void Direct3D11UnloadBackend(PulseBackend backend)
 {
 }
-
-#ifndef D3D11_ERROR_FILE_NOT_FOUND
-	#define D3D11_ERROR_FILE_NOT_FOUND 0x887C0002
-#endif
-
-#ifndef D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS
-	#define D3D11_ERROR_TOO_MANY_UNIQUE_STATE_OBJECTS 0x887C0001
-#endif
-
-#ifndef D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS
-	#define D3D11_ERROR_TOO_MANY_UNIQUE_VIEW_OBJECTS 0x887C0003
-#endif
-
-#ifndef D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD
-	#define D3D11_ERROR_DEFERRED_CONTEXT_MAP_WITHOUT_INITIAL_DISCARD 0x887C0004
-#endif
-
-#ifndef D3DERR_INVALIDCALL
-	#define D3DERR_INVALIDCALL 0x887A0001
-#endif
-
-#ifndef D3DERR_WASSTILLDRAWING
-	#define D3DERR_WASSTILLDRAWING 0x887A000A
-#endif
 
 const char* D3D11VerbaliseResult(HRESULT res)
 {

@@ -36,7 +36,13 @@ local backends = {
 		option = "d3d11",
 		default = is_plat("windows", "msys", "mingw"),
 		custom = function()
-			add_syslinks("d3d11", "d3dcompiler_47", "dxgi", "windowscodecs")
+			if is_plat("linux") then
+				add_sysincludedirs("/usr/include/dxvk")
+				add_syslinks("dxvk_d3d11", "dxvk_dxgi")
+				add_defines("PULSE_D3D11_COMPILER_UNAVAILABLE")
+			else
+				add_syslinks("d3d11", "d3dcompiler_47", "dxgi", "windowscodecs")
+			end
 		end
 	},
 	Software = {
