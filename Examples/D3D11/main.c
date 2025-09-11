@@ -22,25 +22,11 @@ void DebugCallBack(PulseDebugMessageSeverity severity, const char* message)
 #define BUFFER_SIZE (256 * sizeof(uint32_t))
 
 const char* hlsl_source = HLSL_SOURCE(
-	RWBuffer<int> ssbo : register(u0);
-
-	[numthreads(16, 16, 1)]
-	void CSMain(uint3 grid : SV_DispatchThreadID)
-	{
-		ssbo[grid.x * grid.y] = (int)(grid.x * grid.y);
-	}
 );
 
 int main(void)
 {
-	PulseFlags shader_format;
-	#ifdef PULSE_D3D11_COMPILER_UNAVAILABLE
-		shader_format = PULSE_SHADER_FORMAT_DXBC_BIT;
-	#else
-		shader_format = PULSE_SHADER_FORMAT_HLSL_BIT;
-	#endif
-
-	PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_D3D11, shader_format, PULSE_HIGH_DEBUG);
+	PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_D3D11, PULSE_SHADER_FORMAT_DXBC_BIT, PULSE_HIGH_DEBUG);
 	PulseSetDebugCallback(backend, DebugCallBack);
 	PulseDevice device = PulseCreateDevice(backend, NULL, 0);
 
@@ -51,19 +37,15 @@ int main(void)
 
 	// GPU computations
 	{
+		const uint8_t shader_bytecode[] = {
+			#include "shader.cso.h"
+		};
+
 		PulseComputePipelineCreateInfo info = { 0 };
-		#ifdef PULSE_D3D11_COMPILER_UNAVAILABLE
-			const uint8_t shader_bytecode[] = {
-				#include "shader.cso.h"
-			};
-			info.code_size = sizeof(shader_bytecode);
-			info.code = shader_bytecode;
-		#else
-			info.code_size = strlen(hlsl_source);
-			info.code = (const uint8_t*)hlsl_source;
-		#endif
+		info.code_size = sizeof(shader_bytecode);
+		info.code = shader_bytecode;
 		info.entrypoint = "CSMain";
-		info.format = shader_format;
+		info.format = PULSE_SHADER_FORMAT_DXBC_BIT;
 		info.num_readwrite_storage_buffers = 1;
 		PulseComputePipeline pipeline = PulseCreateComputePipeline(device, &info);
 

@@ -10,15 +10,12 @@
 
 #pragma comment(lib,"d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
-#ifndef PULSE_D3D11_COMPILER_UNAVAILABLE
-	#pragma comment(lib,"d3dcompiler.lib")
-#endif
 
 PulseBackendFlags Direct3D11CheckSupport(PulseBackendFlags candidates, PulseShaderFormatsFlags shader_formats_used)
 {
 	if(candidates != PULSE_BACKEND_ANY && (candidates & PULSE_BACKEND_D3D11) == 0)
 		return PULSE_BACKEND_INVALID;
-	if((shader_formats_used & PULSE_SHADER_FORMAT_DXBC_BIT) == 0 && (shader_formats_used & PULSE_SHADER_FORMAT_HLSL_BIT) == 0)
+	if((shader_formats_used & PULSE_SHADER_FORMAT_DXBC_BIT) == 0)
 		return PULSE_BACKEND_INVALID;
 	return PULSE_BACKEND_D3D11;
 }
@@ -62,6 +59,6 @@ PulseBackendHandler D3D11Driver = {
 	.PFN_UnloadBackend = Direct3D11UnloadBackend,
 	.PFN_CreateDevice = Direct3D11CreateDevice,
 	.backend = PULSE_BACKEND_D3D11,
-	.supported_shader_formats = PULSE_SHADER_FORMAT_DXBC_BIT | PULSE_SHADER_FORMAT_HLSL_BIT,
+	.supported_shader_formats = PULSE_SHADER_FORMAT_DXBC_BIT,
 	.driver_data = PULSE_NULLPTR
 };

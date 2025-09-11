@@ -280,6 +280,10 @@ void TestBufferComputeWrite()
 		const uint8_t shader_bytecode[] = {
 			#include "Shaders/Vulkan-OpenGL/SimpleBufferWrite.comp.glsl.h"
 		};
+	#elif defined(D3D11_ENABLED)
+		const uint8_t shader_bytecode[] = {
+			#include "Shaders/D3D11/SimpleBufferWrite.cso.h"
+		};
 	#endif
 
 	PulseBufferCreateInfo buffer_create_info = { 0 };
@@ -350,6 +354,10 @@ void TestBufferComputeCopy()
 	#elif defined(OPENGL_ENABLED) || defined(OPENGLES_ENABLED)
 		const uint8_t shader_bytecode[] = {
 			#include "Shaders/Vulkan-OpenGL/BufferCopy.comp.glsl.h"
+		};
+	#elif defined(D3D11_ENABLED)
+		const uint8_t shader_bytecode[] = {
+			#include "Shaders/D3D11/BufferCopy.cso.h"
 		};
 	#endif
 

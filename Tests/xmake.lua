@@ -2,6 +2,7 @@ local Backend = {
 	VULKAN = 1,
 	OPENGL = 2,
 	OPENGL_ES = 3,
+	D3D11 = 4,
 }
 
 local nzsl_included = false
@@ -142,6 +143,9 @@ local tests = {
 			add_packages("nzsl")
 			add_files("**.nzsl")
 		end
+	},
+	D3D11 = {
+		option = "d3d11",
 	},
 	WebGPU = {
 		option = "webgpu",

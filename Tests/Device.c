@@ -71,6 +71,12 @@ void TestBackendInUse()
 		TEST_ASSERT_EQUAL(PulseGetBackendInUseByDevice(device), PULSE_BACKEND_VULKAN);
 	#elif defined(WEBGPU_ENABLED)
 		TEST_ASSERT_EQUAL(PulseGetBackendInUseByDevice(device), PULSE_BACKEND_WEBGPU);
+	#elif defined(OPENGL_ENABLED)
+		TEST_ASSERT_EQUAL(PulseGetBackendInUseByDevice(device), PULSE_BACKEND_OPENGL);
+	#elif defined(OPENGLES_ENABLED)
+		TEST_ASSERT_EQUAL(PulseGetBackendInUseByDevice(device), PULSE_BACKEND_OPENGL_ES);
+	#elif defined(D3D11_ENABLED)
+		TEST_ASSERT_EQUAL(PulseGetBackendInUseByDevice(device), PULSE_BACKEND_D3D11);
 	#endif
 	PulseDestroyDevice(device);
 
@@ -88,6 +94,12 @@ void TestShaderFormatSupport()
 		TEST_ASSERT_TRUE(PulseDeviceSupportsShaderFormats(device, PULSE_SHADER_FORMAT_SPIRV_BIT));
 	#elif defined(WEBGPU_ENABLED)
 		TEST_ASSERT_TRUE(PulseDeviceSupportsShaderFormats(device, PULSE_SHADER_FORMAT_WGSL_BIT));
+	#elif defined(OPENGL_ENABLED)
+		TEST_ASSERT_TRUE(PulseDeviceSupportsShaderFormats(device, PULSE_SHADER_FORMAT_GLSL_BIT));
+	#elif defined(OPENGLES_ENABLED)
+		TEST_ASSERT_TRUE(PulseDeviceSupportsShaderFormats(device, PULSE_SHADER_FORMAT_GLSL_BIT));
+	#elif defined(D3D11_ENABLED)
+		TEST_ASSERT_TRUE(PulseDeviceSupportsShaderFormats(device, PULSE_SHADER_FORMAT_DXBC_BIT));
 	#endif
 	PulseDestroyDevice(device);
 
