@@ -77,7 +77,6 @@ typedef enum PulseShaderFormatsBits
 	PULSE_SHADER_FORMAT_WGSL_BIT     = PULSE_BIT(4), // Can be used by WebGPU backend
 	PULSE_SHADER_FORMAT_GLSL_BIT     = PULSE_BIT(5), // Can be used by OpenGL / OpenGL_ES backend
 	PULSE_SHADER_FORMAT_DXBC_BIT     = PULSE_BIT(6), // Can be used by D3D11 backend
-	PULSE_SHADER_FORMAT_HLSL_BIT     = PULSE_BIT(7), // Can be used by D3D11 backend
 	// More to come
 } PulseShaderFormatsBits;
 typedef PulseFlags PulseShaderFormatsFlags;

@@ -21,6 +21,10 @@ void TestPipelineSetup()
 		const uint8_t shader_bytecode[] = {
 			#include "Shaders/Vulkan-OpenGL/Simple.comp.glsl.h"
 		};
+	#elif defined(D3D11_ENABLED)
+		const uint8_t shader_bytecode[] = {
+			#include "Shaders/D3D11/Simple.cso.h"
+		};
 	#endif
 
 	PulseComputePipeline pipeline;
@@ -65,6 +69,10 @@ void TestPipelineReadOnlyBindings()
 	#elif defined(OPENGL_ENABLED) || defined(OPENGLES_ENABLED)
 		const uint8_t shader_bytecode[] = {
 			#include "Shaders/Vulkan-OpenGL/ReadOnlyBindings.comp.glsl.h"
+		};
+	#elif defined(D3D11_ENABLED)
+		const uint8_t shader_bytecode[] = {
+			#include "Shaders/D3D11/ReadOnlyBindings.cso.h"
 		};
 	#endif
 
@@ -131,6 +139,10 @@ void TestPipelineWriteOnlyBindings()
 		const uint8_t shader_bytecode[] = {
 			#include "Shaders/Vulkan-OpenGL/WriteOnlyBindings.comp.glsl.h"
 		};
+	#elif defined(D3D11_ENABLED)
+		const uint8_t shader_bytecode[] = {
+			#include "Shaders/D3D11/WriteOnlyBindings.cso.h"
+		};
 	#endif
 
 	PulseBufferCreateInfo buffer_create_info = { 0 };
@@ -195,6 +207,10 @@ void TestPipelineReadWriteBindings()
 	#elif defined(OPENGL_ENABLED) || defined(OPENGLES_ENABLED)
 		const uint8_t shader_bytecode[] = {
 			#include "Shaders/Vulkan-OpenGL/ReadWriteBindings.comp.glsl.h"
+		};
+	#elif defined(D3D11_ENABLED)
+		const uint8_t shader_bytecode[] = {
+			#include "Shaders/D3D11/ReadWriteBindings.cso.h"
 		};
 	#endif
 

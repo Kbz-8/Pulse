@@ -19,6 +19,8 @@ void TestBackendSupport()
 		if(!PulseSupportsBackend(PULSE_BACKEND_OPENGL, PULSE_SHADER_FORMAT_GLSL_BIT))
 	#elif defined(OPENGLES_ENABLED)
 		if(!PulseSupportsBackend(PULSE_BACKEND_OPENGL_ES, PULSE_SHADER_FORMAT_GLSL_BIT))
+	#elif defined(D3D11_ENABLED)
+		if(!PulseSupportsBackend(PULSE_BACKEND_D3D11, PULSE_SHADER_FORMAT_DXBC_BIT))
 	#endif
 	{
 		TEST_MESSAGE("Backend is not supported");
@@ -36,6 +38,8 @@ void TestBackendSetup()
 		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_OPENGL, PULSE_SHADER_FORMAT_GLSL_BIT, PULSE_HIGH_DEBUG);
 	#elif defined(OPENGLES_ENABLED)
 		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_OPENGL_ES, PULSE_SHADER_FORMAT_GLSL_BIT, PULSE_HIGH_DEBUG);
+	#elif defined(D3D11_ENABLED)
+		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_D3D11, PULSE_SHADER_FORMAT_DXBC_BIT, PULSE_HIGH_DEBUG);
 	#endif
 	TEST_ASSERT_NOT_EQUAL_MESSAGE(backend, PULSE_NULL_HANDLE, PulseVerbaliseErrorType(PulseGetLastErrorType()));
 	PulseSetDebugCallback(backend, DumbDebugCallBack);
@@ -50,6 +54,8 @@ void TestBackendAnySetup()
 		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_ANY, PULSE_SHADER_FORMAT_WGSL_BIT, PULSE_HIGH_DEBUG);
 	#elif defined(OPENGL_ENABLED) || defined(OPENGLES_ENABLED)
 		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_ANY, PULSE_SHADER_FORMAT_GLSL_BIT, PULSE_HIGH_DEBUG);
+	#elif defined(D3D11_ENABLED)
+		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_ANY, PULSE_SHADER_FORMAT_DXBC_BIT, PULSE_HIGH_DEBUG);
 	#endif
 	TEST_ASSERT_NOT_EQUAL_MESSAGE(backend, PULSE_NULL_HANDLE, PulseVerbaliseErrorType(PulseGetLastErrorType()));
 	#if defined(VULKAN_ENABLED)
@@ -60,6 +66,8 @@ void TestBackendAnySetup()
 		PulseBackendFlags backend_type = PulseGetBackendType(backend);
 		if(backend_type != PULSE_BACKEND_OPENGL && backend_type != PULSE_BACKEND_OPENGL_ES)
 			TEST_FAIL();
+	#elif defined(D3D11_ENABLED)
+		TEST_ASSERT_EQUAL(PulseGetBackendType(backend), PULSE_BACKEND_D3D11);
 	#endif
 	PulseSetDebugCallback(backend, DumbDebugCallBack);
 	PulseUnloadBackend(backend);
@@ -75,6 +83,8 @@ void TestWrongBackendSetup()
 		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_OPENGL, PULSE_SHADER_FORMAT_MSL_BIT, PULSE_HIGH_DEBUG);
 	#elif defined(OPENGLES_ENABLED)
 		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_OPENGL_ES, PULSE_SHADER_FORMAT_MSL_BIT, PULSE_HIGH_DEBUG);
+	#elif defined(D3D11_ENABLED)
+		PulseBackend backend = PulseLoadBackend(PULSE_BACKEND_D3D11, PULSE_SHADER_FORMAT_MSL_BIT, PULSE_HIGH_DEBUG);
 	#endif
 	TEST_ASSERT_EQUAL(backend, PULSE_NULL_HANDLE);
 	PulseSetDebugCallback(backend, DumbDebugCallBack);

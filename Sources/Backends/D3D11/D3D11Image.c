@@ -35,4 +35,7 @@ bool Direct3D11BlitImage(PulseCommandList cmd, const PulseImageRegion* src, cons
 
 void Direct3D11DestroyImage(PulseDevice device, PulseImage image)
 {
+	Direct3D11Image* d3d11_image = D3D11_RETRIEVE_DRIVER_DATA_AS(image, Direct3D11Image*);
+	free(d3d11_image);
+	free(image);
 }
