@@ -69,13 +69,23 @@ static VkComponentMapping SwizzleForFormat(PulseImageFormat format)
 		};
 	}
 
-	if(format == PULSE_IMAGE_FORMAT_B4G4R4A4_UNORM)
+	if(format == PULSE_IMAGE_FORMAT_B5G6R5_UNORM)
 	{
 		return (VkComponentMapping){
+			VK_COMPONENT_SWIZZLE_B,
 			VK_COMPONENT_SWIZZLE_G,
 			VK_COMPONENT_SWIZZLE_R,
-			VK_COMPONENT_SWIZZLE_A,
-			VK_COMPONENT_SWIZZLE_B
+			VK_COMPONENT_SWIZZLE_ZERO
+		};
+	}
+
+	if(format == PULSE_IMAGE_FORMAT_B5G5R5A1_UNORM)
+	{
+		return (VkComponentMapping){
+			VK_COMPONENT_SWIZZLE_B,
+			VK_COMPONENT_SWIZZLE_G,
+			VK_COMPONENT_SWIZZLE_R,
+			VK_COMPONENT_SWIZZLE_A
 		};
 	}
 
