@@ -107,7 +107,7 @@ on_run(function()
 				local has_copyright
 				local should_fix = false
 
-				local year, authors = lines[1]:match("^// Copyright %(C%) (Y?E?A?R?%d*) kanel$")
+				local year, authors = lines[1]:match("^// Copyright %(C%) (Y?E?A?R?%d*) kbz_8$")
 				has_copyright = year ~= nil
 
 				if has_copyright then
@@ -135,7 +135,7 @@ on_run(function()
 						File = file_path,
 						Func = function(lines)
 							local copyright_lines = {
-								"// Copyright (C) " .. current_year .. " kanel",
+								"// Copyright (C) " .. current_year .. " kbz_8",
 								"// This file is part of \"Pulse\"",
 								"// For conditions of distribution and use, see copyright notice in LICENSE"
 							}

@@ -46,7 +46,7 @@ def main():
 
     try:
         with open(sys.argv[3], "x") as f:
-            f.write("""// Copyright (C) 2025 kanel
+            f.write("""// Copyright (C) 2025 kbz_8
 // This file is part of "Pulse"
 // For conditions of distribution and use, see copyright notice in LICENSE
 
